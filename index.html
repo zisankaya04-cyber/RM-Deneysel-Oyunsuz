@@ -7,7 +7,9 @@
 <title>DRM Bellek Deneyi</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
@@ -16,7 +18,6 @@ body {
     background-image: url("arkaplan.jpg");
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
     background-attachment: fixed;
     display: flex;
     justify-content: center;
@@ -24,73 +25,87 @@ body {
     padding: 20px;
 }
 
-.container {
-    background: rgba(255,255,255,0.93);
-    width: 90%;
-    max-width: 650px;
-    padding: 35px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.35);
+    backdrop-filter: blur(5px);
+    z-index: -1;
 }
 
-.hidden { display: none !important; }
-h1 { font-size: 26px; }
+.container {
+    width: 100%;
+    max-width: 650px;
+    min-height: 350px;
+    padding: 35px;
+    background: rgba(255,255,255,0.88);
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    text-align: center;
+}
 
-#presentationWord, #testWord {
-    font-size: 40px;
-    font-weight: bold;
-    margin: 65px 0;
-    min-height: 50px;
+h1 {
+    color: #263b59;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #34495e;
+}
+
+p {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #333;
 }
 
 button {
-    padding: 15px 28px;
     border: none;
     border-radius: 9px;
+    padding: 13px 25px;
+    margin: 8px;
+    background: #315b86;
     color: white;
-    font-size: 17px;
+    font-size: 16px;
     cursor: pointer;
-    margin: 10px;
+    transition: 0.2s;
 }
 
-button:disabled { opacity: 0.5; cursor: default; }
-.start { background: #405b80; }
-.yes { background: #327a59; }
-.no { background: #a34d4d; }
-#choices { margin-top: 35px; }
-#progress { color: #555; font-size: 14px; }
-p { line-height: 1.7; }
+button:hover {
+    background: #203f61;
+    transform: scale(1.03);
+}
 
-/* 5 SANİYELİK 3B LOGO AÇILIŞI */
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* AÇILIŞ LOGOSU */
+
 #logoSplash {
     position: fixed;
     inset: 0;
     z-index: 9999;
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(circle, #ffffff 45%, #e9edf5 100%);
-    perspective: 1100px;
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 1s ease, visibility 1s ease;
-}
-
-#logoSplash.hide {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
+    background:
+        radial-gradient(circle, #ffffff 0%, #dce9f5 55%, #9bb6d0 100%);
 }
 
 .logo-wrapper {
-    position: relative;
-    width: min(78vw, 430px);
-    aspect-ratio: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transform-style: preserve-3d;
+    position: absolute;
+    width: min(65vw, 430px);
+    height: min(65vw, 430px);
+    max-height: 430px;
+    max-width: 430px;
     animation: logoTravel 5s ease-in-out forwards;
 }
 
@@ -99,455 +114,673 @@ p { line-height: 1.7; }
     height: 100%;
     object-fit: contain;
     border-radius: 50%;
-    backface-visibility: visible;
-    transform-style: preserve-3d;
-    animation: logo3D 3.2s ease-in-out infinite;
     filter:
-        drop-shadow(0 0 7px rgba(255,255,255,0.95))
-        drop-shadow(0 0 15px rgba(64,91,128,0.55))
-        drop-shadow(0 0 28px rgba(255,215,100,0.45));
-}
-
-.logo-wrapper::before {
-    content: "";
-    position: absolute;
-    inset: -10%;
-    border-radius: 50%;
-    background: radial-gradient(circle,
-        rgba(255,255,255,0) 38%,
-        rgba(255,215,100,0.28) 58%,
-        rgba(100,150,220,0.18) 68%,
-        rgba(255,255,255,0) 76%);
-    animation: logoGlow 1.8s ease-in-out infinite;
-    pointer-events: none;
+        drop-shadow(0 0 12px rgba(255,255,255,0.95))
+        drop-shadow(0 0 28px rgba(255,255,255,0.9));
+    animation: logoGlow 1.5s ease-in-out infinite alternate;
 }
 
 .logo-wrapper::after {
     content: "";
     position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: linear-gradient(115deg,
-        transparent 36%,
-        rgba(255,255,255,0.88) 49%,
-        rgba(255,255,255,0.15) 53%,
-        transparent 66%);
-    transform: translateX(-130%);
-    animation: logoShine 2.7s ease-in-out infinite;
-    pointer-events: none;
-    mix-blend-mode: screen;
-}
-
-@keyframes logo3D {
-    0%, 100% {
-        transform: rotateY(-13deg) rotateX(5deg) scale(0.98);
-    }
-    50% {
-        transform: rotateY(13deg) rotateX(-5deg) scale(1.02);
-    }
+    top: -20%;
+    left: -100%;
+    width: 55%;
+    height: 140%;
+    transform: skewX(-25deg);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,0.8),
+        transparent
+    );
+    animation: shine 2s ease-in-out infinite;
 }
 
 @keyframes logoTravel {
     0% {
-        transform: translateX(-100vw) scale(0.7);
-        opacity: 0;
+        transform: translateX(-110vw) scale(0.75) rotateY(-20deg);
     }
-    15% {
-        transform: translateX(-65vw) scale(0.85);
-        opacity: 1;
+
+    20% {
+        transform: translateX(-45vw) scale(0.9) rotateY(10deg);
     }
+
     50% {
-        transform: translateX(0) scale(1);
-        opacity: 1;
+        transform: translateX(0) scale(1.05) rotateY(0deg);
     }
-    85% {
-        transform: translateX(65vw) scale(0.85);
-        opacity: 1;
+
+    80% {
+        transform: translateX(45vw) scale(0.9) rotateY(-10deg);
     }
+
     100% {
-        transform: translateX(100vw) scale(0.7);
-        opacity: 0;
+        transform: translateX(110vw) scale(0.75) rotateY(20deg);
     }
 }
 
 @keyframes logoGlow {
-    0%, 100% {
-        opacity: 0.35;
-        transform: scale(0.95);
+    from {
+        filter:
+            drop-shadow(0 0 8px white)
+            drop-shadow(0 0 15px #9ecfff);
     }
-    50% {
-        opacity: 1;
-        transform: scale(1.08);
+
+    to {
+        filter:
+            drop-shadow(0 0 25px white)
+            drop-shadow(0 0 45px #ffffff);
     }
 }
 
-@keyframes logoShine {
-    0% { transform: translateX(-130%); }
-    65%, 100% { transform: translateX(130%); }
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 150%;
+    }
 }
 
-/* BEKLEME EKRANI */
-.timer-circle {
-    width: 150px;
-    height: 150px;
-    margin: 25px auto;
-    position: relative;
-}
+/* KELİME GÖSTERİMİ */
 
-.timer-circle svg {
-    width: 150px;
-    height: 150px;
-    transform: rotate(-90deg);
-}
-
-.timer-circle circle {
-    fill: none;
-    stroke-width: 10;
-}
-
-.timer-background { stroke: #dddddd; }
-
-.timer-progress {
-    stroke: #405b80;
-    stroke-linecap: round;
-    stroke-dasharray: 408.4;
-    stroke-dashoffset: 0;
-    transition: stroke-dashoffset 1s linear;
-}
-
-.timer-number {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+#wordDisplay {
     font-size: 38px;
     font-weight: bold;
-    color: #405b80;
+    color: #263b59;
+    margin: 50px 0;
+    min-height: 60px;
 }
 
-@media (max-width: 480px) {
-    .container { padding: 22px; }
+#testWord {
+    font-size: 30px;
+    font-weight: bold;
+    color: #263b59;
+    margin: 35px 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .logo-wrapper {
-        animation-duration: 5s;
+#countdown {
+    font-size: 48px;
+    font-weight: bold;
+    color: #315b86;
+    margin: 25px;
+}
+
+.test-buttons {
+    margin-top: 25px;
+}
+
+.test-buttons button {
+    min-width: 110px;
+}
+
+#yesButton {
+    background: #287a55;
+}
+
+#yesButton:hover {
+    background: #1d5c40;
+}
+
+#noButton {
+    background: #a74747;
+}
+
+#noButton:hover {
+    background: #813333;
+}
+
+.progress {
+    color: #555;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+@media (max-width: 500px) {
+    .container {
+        padding: 22px;
     }
-    .logo-wrapper img,
-    .logo-wrapper::before,
-    .logo-wrapper::after {
-        animation-duration: 8s;
+
+    #wordDisplay {
+        font-size: 30px;
+    }
+
+    #testWord {
+        font-size: 25px;
+    }
+
+    .logo-wrapper {
+        width: 75vw;
+        height: 75vw;
     }
 }
 </style>
-
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
 
 <body>
 
-<!-- LOGO AÇILIŞ EKRANI -->
+<!-- AÇILIŞ LOGOSU -->
+
 <div id="logoSplash">
     <div class="logo-wrapper">
-        <img src="arkaplan(1).jpg" alt="Üniversite logosu">
+        <img src="arkaplan.jpg" alt="Üniversite logosu">
     </div>
 </div>
 
 <div class="container">
 
-    <div id="startScreen">
-        <h1>Bellek Deneyi</h1>
+    <!-- BAŞLANGIÇ EKRANI -->
+
+    <section id="startScreen" class="hidden">
+        <h1>DRM Bellek Deneyi</h1>
+
         <p>
-            Birazdan ekranda kelimeler göreceksiniz.
+            Bu deneyde size bazı kelimeler gösterilecektir.
             Kelimeleri dikkatlice inceleyiniz ve aklınızda
             tutmaya çalışınız.
         </p>
+
         <p>
-            Her kelime 1,2 saniye boyunca gösterilecektir.
-            Her listenin ardından tanıma testi yapılacaktır.
+            Daha sonra karşınıza çıkan kelimelerin daha önce
+            gösterilip gösterilmediğini belirtmeniz istenecektir.
         </p>
+
         <p>
-            Tanıma testinde karşınıza çıkan kelimelerden
-            daha önce gördüklerinizi belirtmeniz istenecektir.
+            Hazır olduğunuzda deneyi başlatabilirsiniz.
         </p>
-        <button class="start" onclick="startExperiment()">Deneye Başla</button>
-    </div>
 
-    <div id="presentationScreen" class="hidden">
-        <h2 id="listNumber"></h2>
-        <div id="presentationWord"></div>
-        <p id="presentationProgress"></p>
-    </div>
+        <button onclick="startExperiment()">
+            Deneyi Başlat
+        </button>
+    </section>
 
-    <div id="waitingScreen" class="hidden">
-        <h2>Lütfen bekleyiniz...</h2>
-        <p id="waitingMessage">Bir sonraki aşama başlayacaktır.</p>
-        <div class="timer-circle">
-            <svg viewBox="0 0 150 150">
-                <circle class="timer-background" cx="75" cy="75" r="65"></circle>
-                <circle id="timerProgress" class="timer-progress" cx="75" cy="75" r="65"></circle>
-            </svg>
-            <div id="timerNumber" class="timer-number">30</div>
-        </div>
-    </div>
+    <!-- KELİME SUNUM EKRANI -->
 
-    <div id="testScreen" class="hidden">
+    <section id="presentationScreen" class="hidden">
+        <h2 id="listTitle">Kelime Listesi</h2>
+        <div id="wordDisplay"></div>
+        <p id="wordProgress" class="progress"></p>
+    </section>
+
+    <!-- TEST EKRANI -->
+
+    <section id="testScreen" class="hidden">
         <h2>Tanıma Testi</h2>
-        <p>Bu kelimeyi az önceki listede gördünüz mü?</p>
-        <div id="testWord"></div>
-        <div id="choices">
-            <button class="yes" onclick="answer(true)">Gördüm</button>
-            <button class="no" onclick="answer(false)">Görmedim</button>
-        </div>
-        <p id="progress"></p>
-    </div>
 
-    <div id="endScreen" class="hidden">
-        <h2>Deney Tamamlandı</h2>
-        <p>Katılımınız için teşekkür ederiz.</p>
-        <button class="start" onclick="downloadResults()">Sonuçları İndir</button>
-    </div>
+        <p>
+            Aşağıdaki kelime daha önce gösterilen listede
+            bulunuyor muydu?
+        </p>
+
+        <div id="testWord"></div>
+
+        <div class="test-buttons">
+            <button id="yesButton" onclick="answerTest(true)">
+                Evet
+            </button>
+
+            <button id="noButton" onclick="answerTest(false)">
+                Hayır
+            </button>
+        </div>
+
+        <p id="testProgress" class="progress"></p>
+    </section>
+
+    <!-- BEKLEME EKRANI -->
+
+    <section id="waitingScreen" class="hidden">
+        <h2>Bekleme Süresi</h2>
+
+        <p>
+            Bir sonraki kelime listesine geçmeden önce
+            lütfen bekleyiniz.
+        </p>
+
+        <div id="countdown">30</div>
+    </section>
+
+    <!-- BİTİŞ EKRANI -->
+
+    <section id="endScreen" class="hidden">
+        <h1>Deney Tamamlandı</h1>
+
+        <p>
+            Katılımınız için teşekkür ederiz.
+            Deney sonuçlarınız hazır.
+        </p>
+
+        <button onclick="downloadResults()">
+            Excel Sonuçlarını İndir
+        </button>
+    </section>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
 <script>
 
+/* AÇILIŞ EKRANI */
+
+window.addEventListener("load", function() {
+    setTimeout(function() {
+        document.getElementById("logoSplash").style.display = "none";
+        showScreen("startScreen");
+    }, 5000);
+});
+
+
 /* KELİME LİSTELERİ */
+
 const lists = [
-    ["Elma", "Şeftali", "Kayısı", "Armut", "Erik"],
-    ["Ritim", "Çalgı", "Nota", "Enstürman", "Melodi", "Şarkı"],
-    ["Tabak", "Kaşık", "Bıçak", "Bardak", "Tencere", "Çatal", "Tava"],
-    ["İlaç", "Serum", "Doktor", "Hemşire", "Tedavi", "Ameliyat", "Sağlık", "Hasta"],
-    ["Güneş", "Uydu", "Yıldız", "Dünya", "Yörünge", "Meteor", "Astronot", "Neptün", "Galaksi"],
-    ["Körfez", "Dalga", "Gemi", "Balık", "Mercan", "Okyanus", "Yosun", "Sahil", "Deniz", "Kum"]
+
+    [
+        "Elma",
+        "Şeftali",
+        "Kayısı",
+        "Armut",
+        "Erik"
+    ],
+
+    [
+        "Ritim",
+        "Çalgı",
+        "Nota",
+        "Enstürman",
+        "Melodi",
+        "Şarkı"
+    ],
+
+    [
+        "Tabak",
+        "Kaşık",
+        "Bıçak",
+        "Bardak",
+        "Tencere",
+        "Çatal",
+        "Tava"
+    ],
+
+    [
+        "İlaç",
+        "Serum",
+        "Doktor",
+        "Hemşire",
+        "Tedavi",
+        "Ameliyat",
+        "Sağlık",
+        "Hasta"
+    ],
+
+    [
+        "Güneş",
+        "Uydu",
+        "Yıldız",
+        "Dünya",
+        "Yörünge",
+        "Meteor",
+        "Astronot",
+        "Neptün",
+        "Galaksi"
+    ],
+
+    [
+        "Körfez",
+        "Dalga",
+        "Gemi",
+        "Balık",
+        "Mercan",
+        "Okyanus",
+        "Yosun",
+        "Sahil",
+        "Deniz",
+        "Kum"
+    ]
+
 ];
+
 
 /* TANIMA TESTLERİ */
+
 const tests = [
+
     [
-        ["Elma", true], ["Armut", true], ["Kiraz", false], ["Şeftali", true],
-        ["Sebze", false], ["Kayısı", true], ["Meyve", false], ["Erik", true]
+        ["Elma", true],
+        ["Armut", true],
+        ["Kiraz", false],
+        ["Şeftali", true],
+        ["Sebze", false],
+        ["Kayısı", true],
+        ["Meyve", false],
+        ["Erik", true]
     ],
+
     [
-        ["Çalgı", true], ["Nota", true], ["Dans", false], ["Şarkı", true],
-        ["Melodi", true], ["Ritim", true], ["Sahne", false],
-        ["Enstrüman", true], ["Müzik", false]
+        ["Çalgı", true],
+        ["Nota", true],
+        ["Dans", false],
+        ["Şarkı", true],
+        ["Melodi", true],
+        ["Ritim", true],
+        ["Sahne", false],
+        ["Enstrüman", true],
+        ["Müzik", false]
     ],
+
     [
-        ["Tabak", true], ["Kaşık", true], ["Mutfak", false], ["Çatal", true],
-        ["Bıçak", true], ["Bardak", true], ["Kupa", false], ["Ev", false],
-        ["Tencere", true], ["Tava", true]
+        ["Tabak", true],
+        ["Kaşık", true],
+        ["Mutfak", false],
+        ["Çatal", true],
+        ["Bıçak", true],
+        ["Bardak", true],
+        ["Kupa", false],
+        ["Ev", false],
+        ["Tencere", true],
+        ["Tava", true]
     ],
+
     [
-        ["Doktor", true], ["Hastane", false], ["İlaç", true], ["Hemşire", true],
-        ["Hasta", true], ["Tedavi", true], ["Eczane", false],
-        ["Ameliyat", true], ["Meslek", false], ["Serum", true], ["Sağlık", true]
+        ["Doktor", true],
+        ["Hastane", false],
+        ["İlaç", true],
+        ["Hemşire", true],
+        ["Hasta", true],
+        ["Tedavi", true],
+        ["Eczane", false],
+        ["Ameliyat", true],
+        ["Meslek", false],
+        ["Serum", true],
+        ["Sağlık", true]
     ],
+
     [
-        ["Gezegen", false], ["Galaksi", true], ["Uzay", false], ["Neptün", true],
-        ["Dünya", true], ["Yıldız", true], ["Güneş", true], ["Meteor", true],
-        ["Astronot", true], ["Uydu", true], ["Yörünge", true], ["Canlı", false]
+        ["Gezegen", false],
+        ["Galaksi", true],
+        ["Uzay", false],
+        ["Neptün", true],
+        ["Dünya", true],
+        ["Yıldız", true],
+        ["Güneş", true],
+        ["Meteor", true],
+        ["Astronot", true],
+        ["Uydu", true],
+        ["Yörünge", true],
+        ["Canlı", false]
     ],
+
     [
-        ["Deniz", true], ["Dalga", true], ["Göl", false], ["Kum", true],
-        ["Sahil", true], ["Gemi", true], ["Balık", true], ["İçecek", false],
-        ["Okyanus", true], ["Mercan", true], ["Sörf", false],
-        ["Körfez", true], ["Yosun", true]
+        ["Deniz", true],
+        ["Dalga", true],
+        ["Göl", false],
+        ["Kum", true],
+        ["Sahil", true],
+        ["Gemi", true],
+        ["Balık", true],
+        ["İçecek", false],
+        ["Okyanus", true],
+        ["Mercan", true],
+        ["Sörf", false],
+        ["Körfez", true],
+        ["Yosun", true]
     ]
+
 ];
 
+
 /* DEĞİŞKENLER */
+
+let participantCode = "";
 let currentList = 0;
 let currentWord = 0;
-let currentTest = [];
-let currentTestIndex = 0;
+let currentTest = 0;
+
+let currentTestItems = [];
 let testStartTime = 0;
+
 let results = [];
-let participantCode = "";
+
 
 /* EKRAN DEĞİŞTİRME */
-function showScreen(id) {
-    document.querySelectorAll(".container > div")
-        .forEach(div => div.classList.add("hidden"));
-    document.getElementById(id).classList.remove("hidden");
+
+function showScreen(screenId) {
+
+    const screens = [
+        "startScreen",
+        "presentationScreen",
+        "testScreen",
+        "waitingScreen",
+        "endScreen"
+    ];
+
+    screens.forEach(function(id) {
+        document.getElementById(id).classList.add("hidden");
+    });
+
+    document.getElementById(screenId).classList.remove("hidden");
 }
 
-/* DENEYİ BAŞLAT */
-function startExperiment() {
-    participantCode = prompt("Katılımcı numarasını giriniz:");
 
-    if (!participantCode || !participantCode.trim()) {
-        alert("Lütfen bir katılımcı numarası giriniz.");
+/* DENEYİ BAŞLAT */
+
+function startExperiment() {
+
+    participantCode = prompt("Katılımcı kodunuzu giriniz:");
+
+    if (!participantCode || participantCode.trim() === "") {
+        alert("Lütfen geçerli bir katılımcı kodu giriniz.");
         return;
     }
 
     participantCode = participantCode.trim();
+
     currentList = 0;
     currentWord = 0;
+    currentTest = 0;
+
     results = [];
 
+    showList();
+}
+
+
+/* KELİME LİSTESİNİ GÖSTER */
+
+function showList() {
+
+    currentWord = 0;
+
     showScreen("presentationScreen");
+
+    document.getElementById("listTitle").textContent =
+        (currentList + 1) + ". Kelime Listesi";
+
     showNextWord();
 }
 
-/* KELİMELERİ GÖSTER */
+
+/* SIRADAKİ KELİME */
+
 function showNextWord() {
-    if (currentWord >= lists[currentList].length) {
-        startTest();
-        return;
+
+    const display = document.getElementById("wordDisplay");
+    const progress = document.getElementById("wordProgress");
+
+    if (currentWord < lists[currentList].length) {
+
+        display.textContent = lists[currentList][currentWord];
+
+        progress.textContent =
+            (currentWord + 1) + " / " + lists[currentList].length;
+
+        currentWord++;
+
+        setTimeout(showNextWord, 1200);
+
+    } else {
+
+        display.textContent = "";
+
+        startRecognitionTest();
     }
-
-    document.getElementById("listNumber").textContent =
-        "Liste " + (currentList + 1);
-
-    document.getElementById("presentationWord").textContent =
-        lists[currentList][currentWord];
-
-    document.getElementById("presentationProgress").textContent =
-        "Kelime " + (currentWord + 1) + " / " + lists[currentList].length;
-
-    currentWord++;
-    setTimeout(showNextWord, 1200);
 }
 
-/* TESTİ BAŞLAT */
-function startTest() {
+
+/* TANIMA TESTİNİ BAŞLAT */
+
+function startRecognitionTest() {
+
+    currentTest = 0;
+
+    currentTestItems = [...tests[currentList]];
+
+    // Test kelimelerinin sırasını rastgele değiştirir.
+    currentTestItems.sort(() => Math.random() - 0.5);
+
     showScreen("testScreen");
-    currentTest = [...tests[currentList]];
-    currentTest.sort(() => Math.random() - 0.5);
-    currentTestIndex = 0;
-    showTestWord();
+
+    showNextTestItem();
 }
+
 
 /* TEST KELİMESİNİ GÖSTER */
-function showTestWord() {
-    if (currentTestIndex >= currentTest.length) {
-        finishList();
+
+function showNextTestItem() {
+
+    if (currentTest >= currentTestItems.length) {
+
+        finishCurrentList();
         return;
     }
 
-    const item = currentTest[currentTestIndex];
+    const item = currentTestItems[currentTest];
 
     document.getElementById("testWord").textContent = item[0];
 
-    document.getElementById("progress").textContent =
-        "Kelime " + (currentTestIndex + 1) + " / " + currentTest.length;
+    document.getElementById("testProgress").textContent =
+        (currentTest + 1) + " / " + currentTestItems.length;
 
+    // Tepki süresinin başlangıcı
     testStartTime = performance.now();
 }
 
-/* CEVAP AL */
-function answer(response) {
-    const responseTime = performance.now() - testStartTime;
-    const item = currentTest[currentTestIndex];
-    const correctAnswer = item[1];
-    const isCorrect = response === correctAnswer;
 
-    results.push({
-        participant: participantCode,
-        list: currentList + 1,
-        word: item[0],
-        previouslyShown: correctAnswer,
-        participantAnswer: response,
-        correct: isCorrect,
-        responseTimeMs: responseTime.toFixed(2)
-    });
+/* KATILIMCI CEVABI */
 
-    currentTestIndex++;
-    showTestWord();
-}
+function answerTest(answer) {
 
-/* LİSTEYİ BİTİR */
-function finishList() {
-    currentList++;
-
-    if (currentList >= lists.length) {
-        showScreen("endScreen");
-    } else {
-        startCountdown("Bir sonraki liste başlayacaktır.", function() {
-            currentWord = 0;
-            showScreen("presentationScreen");
-            showNextWord();
-        });
-    }
-}
-
-/* 30 SANİYELİK LİSTELER ARASI BEKLEME */
-function startCountdown(message, callback) {
-    showScreen("waitingScreen");
-    document.getElementById("waitingMessage").textContent = message;
-
-    let remaining = 30;
-    const timerNumber = document.getElementById("timerNumber");
-    const timerProgress = document.getElementById("timerProgress");
-    const circumference = 2 * Math.PI * 65;
-
-    timerProgress.style.strokeDasharray = circumference;
-    timerProgress.style.strokeDashoffset = 0;
-    timerNumber.textContent = remaining;
-
-    const countdown = setInterval(function() {
-        remaining--;
-        timerNumber.textContent = remaining;
-
-        const progress = (30 - remaining) / 30;
-        timerProgress.style.strokeDashoffset = circumference * progress;
-
-        if (remaining <= 0) {
-            clearInterval(countdown);
-            callback();
-        }
-    }, 1000);
-}
-
-/* EXCEL OLARAK İNDİR */
-function downloadResults() {
-    if (typeof XLSX === "undefined") {
-        alert("Excel dosyası oluşturulamadı. İnternet bağlantınızı kontrol edip tekrar deneyiniz.");
+    if (currentTest >= currentTestItems.length) {
         return;
     }
 
-    const excelRows = results.map(row => ({
-        "Katılımcı": row.participant,
-        "Liste": row.list,
-        "Kelime": row.word,
-        "Daha Önce Gösterildi": row.previouslyShown ? "Evet" : "Hayır",
-        "Katılımcı Cevabı": row.participantAnswer ? "Gördüm" : "Görmedim",
-        "Doğru/Yanlış": row.correct ? "Doğru" : "Yanlış",
-        "Tepki Süresi (ms)": Number(row.responseTimeMs)
-    }));
+    const responseTime = performance.now() - testStartTime;
 
-    const worksheet = XLSX.utils.json_to_sheet(excelRows);
+    const item = currentTestItems[currentTest];
+
+    const correctAnswer = item[1];
+
+    results.push({
+
+        participant: participantCode,
+
+        list: currentList + 1,
+
+        word: item[0],
+
+        previouslyShown: correctAnswer ? "Evet" : "Hayır",
+
+        participantAnswer: answer ? "Evet" : "Hayır",
+
+        correct: answer === correctAnswer ? "Doğru" : "Yanlış",
+
+        responseTimeMs: Math.round(responseTime)
+
+    });
+
+    currentTest++;
+
+    showNextTestItem();
+}
+
+
+/* LİSTE TAMAMLANDI */
+
+function finishCurrentList() {
+
+    currentList++;
+
+    // Son liste tamamlandıysa doğrudan bitiş ekranı
+    if (currentList >= lists.length) {
+
+        showScreen("endScreen");
+        return;
+    }
+
+    // Listeler arasında 30 saniye bekleme
+    startWaitingPeriod();
+}
+
+
+/* 30 SANİYELİK BEKLEME */
+
+function startWaitingPeriod() {
+
+    showScreen("waitingScreen");
+
+    let remaining = 30;
+
+    const countdown = document.getElementById("countdown");
+
+    countdown.textContent = remaining;
+
+    const timer = setInterval(function() {
+
+        remaining--;
+
+        countdown.textContent = remaining;
+
+        if (remaining <= 0) {
+
+            clearInterval(timer);
+
+            showList();
+        }
+
+    }, 1000);
+}
+
+
+/* EXCEL SONUÇ DOSYASI */
+
+function downloadResults() {
+
+    if (typeof XLSX === "undefined") {
+        alert("Excel kütüphanesi yüklenemedi. İnternet bağlantınızı kontrol ediniz.");
+        return;
+    }
+
+    if (results.length === 0) {
+        alert("İndirilecek sonuç bulunamadı.");
+        return;
+    }
+
+    const worksheet = XLSX.utils.json_to_sheet(results);
+
     const workbook = XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(
         workbook,
         worksheet,
-        "Deney Sonuçları"
+        "DRM Sonuçları"
     );
 
-    worksheet["!cols"] = [
-        { wch: 15 }, { wch: 10 }, { wch: 20 }, { wch: 23 },
-        { wch: 20 }, { wch: 15 }, { wch: 20 }
-    ];
+    const filename =
+        "DRM_Sonuclari_" + participantCode + ".xlsx";
 
-    XLSX.writeFile(
-        workbook,
-        "DRM_Sonuclari_" + participantCode + ".xlsx"
-    );
+    XLSX.writeFile(workbook, filename);
 }
-
-/* LOGO 5 SANİYE GÖRÜNÜR */
-window.addEventListener("load", function() {
-    setTimeout(function() {
-        const splash = document.getElementById("logoSplash");
-        splash.classList.add("hide");
-
-        setTimeout(function() {
-            splash.style.display = "none";
-        }, 1000);
-    }, 5000);
-});
 
 </script>
 
